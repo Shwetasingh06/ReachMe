@@ -2,6 +2,7 @@ package com.example.reachme.welcome;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -9,11 +10,14 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.adapter.FragmentViewHolder;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +34,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private ViewPager2 vp;
     private Button loginHere;
     private TextView tv; //create account
+    private CardView cardView;
 
     private int pageCounter = 0 ; //page counter for scrolling horizontally
     private Handler handler;
@@ -44,6 +49,7 @@ public class WelcomeActivity extends AppCompatActivity {
         vp = findViewById(R.id.viewPager2);
         loginHere = findViewById(R.id.welcome_btn_loginhere);
         tv = findViewById(R.id.welcome_tv_register);
+        cardView = findViewById(R.id.cardView);
         handler = new Handler();
 
 
@@ -53,10 +59,9 @@ public class WelcomeActivity extends AppCompatActivity {
         adapter.addFragment(new WelcomePage3Fragment());
 
         //avoid human interaction
-        vp.setUserInputEnabled(false);
+//        vp.setUserInputEnabled(false);
         vp.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         vp.setAdapter(adapter);
-        handler.postDelayed(runnable, 0);
 
         vp.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -68,6 +73,9 @@ public class WelcomeActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 pageCounter = position+1;
+                handler.removeCallbacks(runnable);
+
+                handler.postDelayed(runnable, 4000);
             }
 
             @Override
@@ -81,7 +89,9 @@ public class WelcomeActivity extends AppCompatActivity {
          */
         loginHere.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
+                final Animation myAnim = AnimationUtils.loadAnimation(WelcomeActivity.this, R.anim.button_press_pop_down);
+                cardView.startAnimation(myAnim);
                 Toast.makeText(WelcomeActivity.this, "Login Here", Toast.LENGTH_SHORT).show();
             }
         });
@@ -102,13 +112,25 @@ public class WelcomeActivity extends AppCompatActivity {
             if(pageCounter>= vp.getAdapter().getItemCount()){
                 pageCounter = 0;
             }
-            Log.d(TAG, "run: "+pageCounter);
+//            Log.d(TAG, "run: "+pageCounter);
             vp.setCurrentItem(pageCounter, true);
             handler.postDelayed(runnable, 4000); //set the limit for pager to move to next page
 
         }
     };
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        handler.removeCallbacks(runnable);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handler.post(runnable);
+    }
 
     //Adapter for view pager2
     private class MyAdapter extends FragmentStateAdapter{
