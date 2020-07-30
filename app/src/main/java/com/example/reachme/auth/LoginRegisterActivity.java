@@ -25,7 +25,6 @@ public class LoginRegisterActivity extends AppCompatActivity {
         AuthenticationPagerAdapter pagerAdapter=new AuthenticationPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(new LoginFragment());
         pagerAdapter.addFragment(new RegisterFragment());
-        pagerAdapter.addFragment(new RegisterFragment());
         ViewPager.setAdapter(pagerAdapter);
     }
 

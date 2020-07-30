@@ -58,7 +58,7 @@ public class WelcomeActivity extends AppCompatActivity {
         adapter.addFragment(new WelcomePage2Fragment());
         adapter.addFragment(new WelcomePage3Fragment());
 
-        //avoid human interaction
+        //avoid human interaction for swipe
 //        vp.setUserInputEnabled(false);
         vp.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         vp.setAdapter(adapter);
