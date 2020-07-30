@@ -52,8 +52,8 @@ public class WelcomeActivity extends AppCompatActivity {
         adapter.addFragment(new WelcomePage2Fragment());
         adapter.addFragment(new WelcomePage3Fragment());
 
-        //uncomment this to avoid human interaction
-//        vp.setUserInputEnabled(false);
+        //avoid human interaction
+        vp.setUserInputEnabled(false);
         vp.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         vp.setAdapter(adapter);
         handler.postDelayed(runnable, 0);
@@ -104,7 +104,7 @@ public class WelcomeActivity extends AppCompatActivity {
             }
             Log.d(TAG, "run: "+pageCounter);
             vp.setCurrentItem(pageCounter, true);
-            handler.postDelayed(runnable, 4500); //set the limit for pager to move to next page
+            handler.postDelayed(runnable, 4000); //set the limit for pager to move to next page
 
         }
     };
