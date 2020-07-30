@@ -15,17 +15,26 @@ import java.util.ArrayList;
 
 public class LoginRegisterActivity extends AppCompatActivity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_register);
 
-        ViewPager ViewPager=findViewById(R.id.viewpager);
+        ViewPager viewPager=findViewById(R.id.viewpager);
 
         AuthenticationPagerAdapter pagerAdapter=new AuthenticationPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(new LoginFragment());
         pagerAdapter.addFragment(new RegisterFragment());
-        ViewPager.setAdapter(pagerAdapter);
+        viewPager.setAdapter(pagerAdapter);
+
+        String openPage = getIntent().getStringExtra("openingPage");
+        if(openPage!=null){
+            if(openPage.equals("register")){
+                viewPager.setCurrentItem(1);
+            }
+        }
     }
 
     class AuthenticationPagerAdapter extends FragmentPagerAdapter {

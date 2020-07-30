@@ -11,6 +11,7 @@ import androidx.viewpager2.adapter.FragmentViewHolder;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.animation.Animator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.reachme.R;
+import com.example.reachme.auth.LoginRegisterActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +69,25 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                /*
+
+                Offset values are the values which changes rapidly on swapping effect
+                when user start swapping it changes from 0.0 to 1.0
+                hence if offset is between 0.1 to 0.7 then auto-scrolling is off for that period
+                so that user's swapping is not interrupted by handler
+
+                for more detail=>
+                check the log value to see actual result
+                Log.d(TAG, "onPageScrolled: position: "+position+" positionOffset: "+positionOffset+" positionOffsetPixel : "+positionOffsetPixels);
+
+                 */
+                if(positionOffset>=0.1 && positionOffset<=0.7)
+                {
+                    handler.removeCallbacks(runnable);
+                }
+                else{
+                    handler.postDelayed(runnable, 4000);
+                }
             }
 
             @Override
@@ -81,6 +102,7 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
+
             }
         });
 
@@ -92,7 +114,9 @@ public class WelcomeActivity extends AppCompatActivity {
             public void onClick(final View v) {
                 final Animation myAnim = AnimationUtils.loadAnimation(WelcomeActivity.this, R.anim.button_press_pop_down);
                 cardView.startAnimation(myAnim);
-                Toast.makeText(WelcomeActivity.this, "Login Here", Toast.LENGTH_SHORT).show();
+                Intent loginIntent = new Intent(WelcomeActivity.this, LoginRegisterActivity.class);
+                loginIntent.putExtra("openingPage", "login");
+                startActivity(loginIntent);
             }
         });
 
@@ -100,7 +124,10 @@ public class WelcomeActivity extends AppCompatActivity {
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(WelcomeActivity.this, "Create Account", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(WelcomeActivity.this, "Create Account", Toast.LENGTH_SHORT).show();
+                Intent registerIntent = new Intent(WelcomeActivity.this, LoginRegisterActivity.class);
+                registerIntent.putExtra("openingPage", "register");
+                startActivity(registerIntent);
             }
         });
     }
@@ -113,7 +140,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 pageCounter = 0;
             }
 //            Log.d(TAG, "run: "+pageCounter);
-            vp.setCurrentItem(pageCounter, true);
+            vp.setCurrentItem(pageCounter, false);
             handler.postDelayed(runnable, 4000); //set the limit for pager to move to next page
 
         }
